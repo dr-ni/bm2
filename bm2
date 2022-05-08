@@ -1,0 +1,79 @@
+#!/usr/bin/env python3
+# 
+# Simple cmmand-line tool for BM2 bluetooth car battery monitor
+#
+# Copyright (c) 2022 dr-ni https://github.com/dr-ni/bm2
+# MIT License
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+# To install bluepy for Python3:
+# $ sudo pip3 install bluepy
+
+import struct
+import time
+from Crypto.Cipher import AES
+from bluepy import btle
+
+KEY = b"\x6c\x65\x61\x67\x65\x6e\x64\xff\xfe\x31\x38\x38\x32\x34\x36\x36"
+
+def myatof(s):
+    try:
+        return float(s);
+    except:
+        last_result = None
+        for i in range(1, len(s)):
+            try:
+                last_result = float(s[:i])
+            except:
+                return last_result
+    return last_result
+
+class MyDelegate(btle.DefaultDelegate):
+    def __init__(self):
+        btle.DefaultDelegate.__init__(self)
+        # ... initialise here
+
+    def handleNotification(self, cHandle, data):
+        # ... perhaps check cHandle
+        # ... process 'data'
+        now = int( time.time() )
+        encrypted_data = data
+        decrypted_data = AES.new(KEY, AES.MODE_CBC, bytes([0] * 16)).decrypt(bytes(encrypted_data))
+        voltage = (struct.unpack(">H", decrypted_data[1:1 + 2])[0] >> 4) / 100
+        payload = f'{now} {voltage}'
+        print(payload)
+        
+# Initialisation  -------
+address = "F8:30:02:46:D6:0B"
+service_uuid = "0000fff0-0000-1000-8000-00805f9b34fb"
+
+p = btle.Peripheral(address)
+p.setDelegate(MyDelegate())
+
+# Setup to turn notifications on, e.g.
+svc = p.getServiceByUUID(service_uuid)
+
+while True:
+    if p.waitForNotifications(1.0):
+        # handleNotification() was called
+        continue
+
+    #print("Waiting...")
+    # Perhaps do something else here
