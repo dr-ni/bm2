@@ -23,9 +23,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-# To install bluepy for Python3:
-# $ sudo pip3 install bluepy
 
+import argparse
 import struct
 import time
 from Crypto.Cipher import AES
@@ -61,7 +60,15 @@ class MyDelegate(btle.DefaultDelegate):
         print(payload)
         
 # Initialisation  -------
-address = "F8:30:02:46:D6:0B"
+print("BM2 Bluetooth Battery Monitor (c) 2022 https://github.com/dr-ni/bm2")
+argparser = argparse.ArgumentParser()
+argparser.add_argument('--mac', type=str, metavar="BLE MAC address", required=True)
+argparser.add_argument('--logfile', type=str, metavar="LOGFILE", default="")
+
+args = argparser.parse_args()
+
+logfile = args.logfile
+address = args.mac
 service_uuid = "0000fff0-0000-1000-8000-00805f9b34fb"
 
 p = btle.Peripheral(address)
@@ -74,6 +81,3 @@ while True:
     if p.waitForNotifications(1.0):
         # handleNotification() was called
         continue
-
-    #print("Waiting...")
-    # Perhaps do something else here
