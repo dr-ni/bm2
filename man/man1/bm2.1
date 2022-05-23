@@ -7,13 +7,14 @@ bm2
 This is a simple cmmand-line tool for the BM2 bluetooth car battery monitor. It can read the actual battery voltage.
 
 .SH SYNOPSIS
-bm2 [-h] --mac BLE MAC address [--logfile LOGFILE] [--loop Loop until killed]
+bm2 [-h] -m | --mac BLE MAC address [-f | --file Logfilename] [-l | --loop]
 
 .SH COPYRIGHT
 MIT License
 
-Copyright (c) 2022 dr-ni
-
+Copyright (c) 2022 dr-ni & Krystian Dużyński
+This tool is based on the reverse engineered decryption routines
+from https://github.com/KrystianD/bm2-battery-monitor.
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
