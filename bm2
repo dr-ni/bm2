@@ -63,13 +63,18 @@ class MyDelegate(btle.DefaultDelegate):
         encrypted_data = data
         decrypted_data = AES.new(KEY, AES.MODE_CBC, bytes([0] * 16)).decrypt(bytes(encrypted_data))
         voltage = (struct.unpack(">H", decrypted_data[1:1 + 2])[0] >> 4) / 100
-        payload = f'{now} {voltage}'
         if(logfile):
+            payload = f'{now} {voltage}'
             logging.basicConfig(filename=logfile,level=logging.DEBUG,format='%(asctime)s %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
             logging.info(payload)
         else:
-            print(payload)
-        if(loop!="1"):
+            if(loop==False):
+                payload = f'{voltage}'
+                print(payload+' V')
+            else:
+                payload = f'{now} {voltage}'
+                print(payload)
+        if(loop==False):
             p.disconnect();
             exit (0)
         
