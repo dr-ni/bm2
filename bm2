@@ -82,7 +82,7 @@ class MyDelegate(btle.DefaultDelegate):
 signal.signal(signal.SIGINT, handler)
 print("BM2 Bluetooth Battery Monitor (c) 2022 https://github.com/dr-ni/bm2")
 argparser = argparse.ArgumentParser()
-argparser.add_argument('-m', '--mac', type=str, metavar="BLE MAC address", required=True)
+argparser.add_argument('-m', '--mac', type=str, metavar="BLE-MAC-address", required=True)
 argparser.add_argument('-f', '--file', type=str, metavar="Logfile")
 argparser.add_argument('-l', '--loop', action='store_true')
 args = argparser.parse_args()
