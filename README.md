@@ -1,6 +1,8 @@
 # bm2
 A simple cmmand-line tool for the BM2 bluetooth car battery monitor. It can read the actual battery voltage.
 
+![bm2](https://github.com/dr-ni/bm2/blob/main/bm2.png)
+
 ## Requirements
 
 - python3
