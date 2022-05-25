@@ -24,7 +24,7 @@ sudo make uninstall
 
 ## Usage
 ```
-bm2 [-h] -m | --mac BLE-MAC-address [-f | --file Logfile] [-l | --loop]
+bm2 [-h | --help] -m | --mac BLE-MAC-address [-f | --file Logfile] [-l | --loop]
 
 ```
 
