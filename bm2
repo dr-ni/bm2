@@ -64,7 +64,6 @@ class MyDelegate(btle.DefaultDelegate):
         decrypted_data = AES.new(KEY, AES.MODE_CBC, bytes([0] * 16)).decrypt(bytes(encrypted_data))
         voltage = (struct.unpack(">H", decrypted_data[1:1 + 2])[0] >> 4) / 100
         if(logfile):
-            print("BM2 Bluetooth Battery Monitor (c) 2022 https://github.com/dr-ni/bm2")
             payload = f'{now} {voltage}'
             logging.basicConfig(filename=logfile,level=logging.DEBUG,format='%(asctime)s %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
             logging.info(payload)
@@ -108,6 +107,7 @@ try:
     #data_chrc.write(bytes("\x01")) 
 
     if(logfile):
+        print("BM2 Bluetooth Battery Monitor (c) 2022 https://github.com/dr-ni/bm2")
         print("writing to file "+logfile)
   
     while True:
